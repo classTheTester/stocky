@@ -20,7 +20,7 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 model = genai.GenerativeModel('gemini-2.5-flash')
 
-prompt = "The following contains tuples of titles and descriptions of articles. What stocks (along with their tickers) are the most impacted by these news" + article_information
+prompt = "The following contains tuples of titles and descriptions of articles. What stocks (along with their tickers) are the most impacted by these news. return the answer in the following format (stock name, stock ticker, positive or negative impact, description)" + article_information
 response = model.generate_content(prompt)
 
 print(response.text)
