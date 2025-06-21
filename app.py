@@ -5,9 +5,13 @@ app = Flask(__name__)
 
 
 
-@app.route('/')
-def index():
-    return "/api/news"
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({
+        'endpoints' : [
+        '/api/news'
+        ]
+        })               
 
 
 @app.route('/api/news', methods=['GET'])
