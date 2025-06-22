@@ -2,6 +2,7 @@ from newsapi import NewsApiClient
 import os
 from datetime import datetime, timedelta
 import google.generativeai as genai
+import yfinance as yf
 
 
 current_date = datetime.now()
@@ -30,11 +31,30 @@ def getnews(all_articles = all_articles):
         article_information += "(" + article['title'] + "," + article['description'] + ")||" 
 
 
-    genai.configure(api_key="AIzaSyCH-DwXHz7n3tu4kYnMV7Gw52g5tF9BWpc")
+    genai.configure(api_key="AIzaSyBIQAEhBe8pfgN1OMZXDnFRrI3m_EcEkbQ")
 
     model = genai.GenerativeModel('gemini-2.5-flash')
 
     prompt = "The following contains tuples of titles and descriptions of articles. What stocks (along with their tickers) are the most impacted by these news. return the answer in the following format \"(stock name| stock ticker| positive or negative impact| description)\". DO NOT GIVE ANY OTHER TEXT OR CHARACTERS OTHER THAN THIS FORMAT. " + article_information
     response = model.generate_content(prompt)
 
-    return response.text
+    stocks = response.text.split("))")
+
+    for i in range(len(stocks)):
+        split = stocks[i].split("|")
+
+        if len(stocks[i]) <= 1:
+            continue
+
+        try:
+            price = yf.Ticker(split[1]).info['regularMarketPrice']
+        except:
+            continue
+        
+        split.append(str(price))
+
+        stocks[i] = "|".join(split)
+
+    final_response = "))".join(stocks)
+
+    return final_response
