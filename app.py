@@ -1,19 +1,24 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
-from main import summarizeNews
-
+from backend.main import summarizeNews
+from backend.tester import getnews
 app = Flask(__name__)
 
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def root():
-    return render_template("index.html")          
+    return jsonify({
+        'endpoints' : [
+        '/api/news',
+        '/api/price'
+        ]
+        })       
 
 
 @app.route('/api/news', methods=['GET'])
 def summarizetext():
     #index = request.args.get('index')
-    return summarizeNews()
+    return getnews()
 
 
 
